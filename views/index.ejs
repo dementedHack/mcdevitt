@@ -27,31 +27,18 @@
 <div data-role="page" id="uploadInvoicePage">
   <div data-role="header">
 	<a href="#mainMenuPage" data-role="button" data-icon="back">Back</a>
-    <h1>Upload Invoice</h1>
-    <a href="#" id="addItemToDB" data-role="button" data-icon="check">Upload</a>
+    <h1>Header</h1>
   </div>
-  <div data-role="content">	
+  <div data-role="content">
     <div data-role="fieldcontain">
-      <label for="textinput">Company:</label>
-      <input type="text" name="textinput" id="invoiceCompany" value=""  />
+      <label for="textinput">Text Input:</label>
+      <input type="text" name="textinput" id="textinput" value=""  />
     </div>
     <div data-role="fieldcontain">
-      <label for="textinput">Invoice Name:</label>
-      <input type="text" name="textinput" id="invoiceName" value=""  />
+      <label for="textinput">Text Input:</label>
+      <input type="text" name="textinput" id="textinput" value=""  />
     </div>
-    <form>
-     <label for="file-1">Upload Invoice:</label>
-     <input type="file" data-clear-btn="false" name="file-1" id="file-1" value="">
-</form>
-	<div data-role="fieldcontain">
-      <label for="selectmenu" class="select">Constraints:</label>
-      <select name="selectmenu" id="selectmenu">
-        <option value="option1">Option 1</option>
-        <option value="option2">Option 2</option>
-        <option value="option3">Option 3</option>
-      </select>
-    </div>
-  </div>
+  Content </div>
   <div data-role="footer">
     <h4>Footer</h4>
   </div>
@@ -62,49 +49,31 @@
   <div data-role="header">
 	<a href="#mainMenuPage" data-role="button" data-icon="back">Back</a>
     <h1>Manage Invoices</h1>
-    <a href="#" data-role="button" data-icon="plus">New Folder</a>
+    
   </div>
   <div data-role="content">
   	<h1>Invoices</h1>
     <hr>
     <div id="invoiceItems">
-		<% for (var i = 0; i < invoiceItems.length; i++){ %>
-				<h1>Company: <%= invoiceItems[i].CompanyName %></h1>				
+		<% for (var i = 0; i < invoiceItems.length; i++){ %>				
 				<h3> 
-					Invoice Name: <span id="taskName<%= i %>"><%= invoiceItems[i].FirstName %> </span>
+					Task Name:<span id="taskName<%= i %>"><%= invoiceItems[i].taskName %> </span>
 				</h3>
-				<input type="button" id="deleteItem<%= i %>Button" action="/invoice/delete" value="Remove">	
+				<h3 id="dbItemType"> 
+					Task Type: <%= dbItems[i].type %>
+				</h3>
+				<input type="submit" id="deleteItem<%= i %>Button" action="/invoice/delete" value="Remove">	
 				<hr>
 				<script type="text/javascript">
 					// Script will grab the element id from the item when the Remove button is pushed.
 					// When the i'th button is pushed, that item will get deleted from the database.
 					$("#deleteItem<%= i %>Button").click(function(){
-            var newInvoiceItemsDiv = "";
-            $.ajax({
-                url: "/invoicedelete",
-                method: 'post',  
-                data: {_id: "<%= invoiceItems[i].id %>"},
-                success: function(result) {
-                  setTimeout(function(){
-                      for (var i = 0; i < result.length; i++) {
-                        console.log(result[i].company);
-                          newInvoiceItemsDiv += '<h1>Company: ' + result[i].company +'</h1><h3>Invoice Name: <span id="taskName' + i +'">' + result[i].company + '</span></h3>';
-                          newInvoiceItemsDiv += '<input type="button" id="deleteItem' + i + 'Button" action="/invoice/delete" value="Remove"><hr>';
-                          $('#invoiceItems').on('click', '#deleteItem' + i + 'Button', function(){
-                              $.ajax({
-                                  url: "/invoicedelete",
-                                  method: 'post',  
-                                  data: {_id: "<%= invoiceItems[i].id %>"},
-                                  success: function(result) {
-                                      console.log(result);
-                                  }
-                                });
-                          });
-                      }
-                      $(invoiceItems).html(newInvoiceItemsDiv);
-                  }, 400);
-                }
-             });
+						$.post( "/invoice/delete", {
+							_id: "<%= invoiceItems[i].id %>"
+						},function( data ) {
+						  $( ".result" ).html( data );
+						  $("#invoiceItems").load("/" + " #invoiceItems");
+						});
 					});
 				</script>
 		<% } %>
@@ -130,15 +99,16 @@
 <script type="text/javascript">
 					// Script to handle add
 		$("#addItemToDB").click(function(){
-			var itemToSaveName = ($("#invoiceName").val());
-			var itemToSaveCompany = ($("#invoiceCompany").val());
-			//console.log(itemToSaveType)
+			var itemToSaveName = ($("#documentName").val());
+			var itemToSaveType = ($("#documentType").val());
+			console.log(itemToSaveType)
 			$.post( "/", {
-				invoiceName: itemToSaveName,
-				invoiceCompany: itemToSaveCompany
+				documentName: itemToSaveName,
+				documentType: itemToSaveType
 			},function(  ) {
-				$('#invoiceItems').data.reload();
+				
 			});
 		});
 	</script>
 </html>
+
