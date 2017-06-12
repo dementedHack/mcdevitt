@@ -96,19 +96,18 @@
   </div>
 </div>
 </body>
-<script type="text/javascript">
-					// Script to handle add
-		$("#addItemToDB").click(function(){
-			var itemToSaveName = ($("#documentName").val());
-			var itemToSaveType = ($("#documentType").val());
-			console.log(itemToSaveType)
-			$.post( "/", {
-				documentName: itemToSaveName,
-				documentType: itemToSaveType
-			},function(  ) {
-				
-			});
-		});
-	</script>
+<script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBO1-jjR4Nai6fs_VrcfVwlUmBrPz7WPTE",
+    authDomain: "mcdevitt-69fb0.firebaseapp.com",
+    databaseURL: "https://mcdevitt-69fb0.firebaseio.com",
+    projectId: "mcdevitt-69fb0",
+    storageBucket: "mcdevitt-69fb0.appspot.com",
+    messagingSenderId: "975779557838"
+  };
+  firebase.initializeApp(config);
+</script>
 </html>
 

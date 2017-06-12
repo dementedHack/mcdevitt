@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 // insert tedious driver 
 
+var firebase = require("firebase");
+
 
 var async = require('async');
 
@@ -17,31 +19,31 @@ var invoiceItems = [];
 var stack = [];
 
 // Create connection to database
+// Initialize Firebase
+// TODO: Replace with your project's customized code snippet
 var config = {
-  userName: 'kai', // update me
-  password: 'Keepitreal20', // update me
-  server: 'rasmussenmodule3dbserver.database.windows.net', // update me
-  options: {
-      database: 'module3DB', //update me
-      encrypt: true
-  }
-}
-var connection = new Connection(config);
+    apiKey: "AIzaSyBO1-jjR4Nai6fs_VrcfVwlUmBrPz7WPTE",
+    authDomain: "mcdevitt-69fb0.firebaseapp.com",
+    databaseURL: "https://mcdevitt-69fb0.firebaseio.com",
+    storageBucket: "mcdevitt-69fb0.appspot.com"
+  };
+firebase.initializeApp(config);
 
-connection.on('connect', function(err) {
-    if (err) {
-        console.log(err)
-    }
-    else{
-        console.log('connected to DB successfully');
-        //queryDatabase();
-    }
-});
+var database = firebase.database();
+
+function writeToDB() {
+    firebase.database().ref('users/' + "1").set({
+    username: "1",
+    email: "l",
+    profile_picture : "asdfasdfasdf"
+  });
+}
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   invoiceItems = [];
-  queryDatabase();
+  //queryDatabase();
+  writeToDB();
   setTimeout(function(){
   	res.render('index', { title: 'Sample App', invoiceItems: invoiceItems });  
   }, 200);
