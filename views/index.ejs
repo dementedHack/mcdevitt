@@ -57,25 +57,12 @@
     <div id="invoiceItems">
 		<% for (var i = 0; i < invoiceItems.length; i++){ %>				
 				<h3> 
-					Task Name:<span id="taskName<%= i %>"><%= invoiceItems[i].taskName %> </span>
+					Task Name:<span id="taskName<%= i %>"><%= invoiceItems[i] %> </span>
 				</h3>
 				<h3 id="dbItemType"> 
-					Task Type: <%= dbItems[i].type %>
+					Task Type: <%=  %>
 				</h3>
-				<input type="submit" id="deleteItem<%= i %>Button" action="/invoice/delete" value="Remove">	
-				<hr>
-				<script type="text/javascript">
-					// Script will grab the element id from the item when the Remove button is pushed.
-					// When the i'th button is pushed, that item will get deleted from the database.
-					$("#deleteItem<%= i %>Button").click(function(){
-						$.post( "/invoice/delete", {
-							_id: "<%= invoiceItems[i].id %>"
-						},function( data ) {
-						  $( ".result" ).html( data );
-						  $("#invoiceItems").load("/" + " #invoiceItems");
-						});
-					});
-				</script>
+        <hr>
 		<% } %>
 	</div>
   </div>

@@ -39,11 +39,21 @@ function writeToDB() {
   });
 }
 
+function readFromDB(){
+	var ref = firebase.database().ref("city");
+	ref.limitToFirst(2).on("child_added", function(snapshot) {
+	  console.log(snapshot.key);
+	  console.log(snapshot.val().id);
+	  invoiceItems.push(snapshot.key);
+	  invoiceItems.push(snapshot.val().id);
+	});
+}
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   invoiceItems = [];
   //queryDatabase();
-  writeToDB();
+  readFromDB();
   setTimeout(function(){
   	res.render('index', { title: 'Sample App', invoiceItems: invoiceItems });  
   }, 200);
@@ -79,28 +89,3 @@ function scanForInvoices() {
 }
 
 module.exports = router;
-
-function queryDatabase(){
-    console.log('Reading rows from the Table...');
-
-    // Read all rows from table
-    request = new Request(
-    	// Query only returns a few fields
-        "SELECT TOP 10 FirstName, LastName, CompanyName FROM SalesLT.Customer",
-        function(err, rowCount, rows) {
-            console.log(rowCount + ' row(s) returned');
-        }
-    );
-
-    request.on('row', function(columns) {
-        var item = {};
-        columns.forEach(function(column) {
-            //console.log("%s\t%s", column.metadata.colName, column.value);
-            item[column.metadata.colName] = column.value; 
-        });
-            console.log(item);
-            invoiceItems.push(item);
-            console.log("------------------");
-    });
-    connection.execSql(request);
-}
