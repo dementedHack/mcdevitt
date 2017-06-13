@@ -7,8 +7,10 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
 var index = require('./routes/index');
-var invoice = require('./routes/invoice');
-var invoicedelete = require('./routes/invoicedelete');
+var metropolitan = require('./routes/metropolitan');
+var city = require('./routes/city');
+var location = require('./routes/location');
+var project = require('./routes/project');
 
 var app = express();
 
@@ -25,8 +27,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/invoice', invoice);
-app.use('/invoicedelete', invoicedelete);
+app.use('/metropolitan', metropolitan);
+app.use('/city', city);
+app.use('/location', location);
+app.use('/project', project);
 //app.use('/users', users);
 
 // catch 404 and forward to error handledr

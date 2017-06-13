@@ -4,14 +4,13 @@ var router = express.Router();
 
 var firebase = require("firebase");
 
-
+var Metropolitan = require('../models/metropolitan');
 var async = require('async');
 
 var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;
 
 var models = {};
-var Invoice = require('../models/invoicedoc');
 
 //Promise to avoid errors
 var invoiceItems = [];
@@ -34,28 +33,18 @@ var database = firebase.database();
 function writeToDB() {
     firebase.database().ref('users/' + "1").set({
     username: "1",
-    email: "l",
+    email: ["email 1", "email2"],
     profile_picture : "asdfasdfasdf"
   });
-}
-
-function readFromDB(){
-	var ref = firebase.database().ref("city");
-	ref.limitToFirst(2).on("child_added", function(snapshot) {
-	  console.log(snapshot.key);
-	  console.log(snapshot.val().id);
-	  invoiceItems.push(snapshot.key);
-	  invoiceItems.push(snapshot.val().id);
-	});
 }
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   invoiceItems = [];
-  //queryDatabase();
-  readFromDB();
+  //writeToDB();
+  //readMetroItemFromDB();
   setTimeout(function(){
-  	res.render('index', { title: 'Sample App', invoiceItems: invoiceItems });  
+  	res.render('index', { title: 'McDevitt', invoiceItems: invoiceItems });  
   }, 200);
   
 });

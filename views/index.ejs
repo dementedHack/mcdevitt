@@ -14,7 +14,7 @@
   <div data-role="content">
     <div data-role="controlgroup">
         <a href="#uploadInvoicePage" data-role="button">Upload Invoice</a>
-        <a href="#manageInvoicePage" data-role="button">Manage Invoices</a>
+        <a href="#metroViewPage" data-role="button" id="mainMenuMetroButton">Manage Invoices</a>
         <a href="#aboutPage" data-role="button">About</a>
     </div>
   </div>
@@ -44,57 +44,93 @@
   </div>
 </div>
 <!-- Page Break -->
-<!-- Start of Invoice Management Page -->
-<div data-role="page" id="manageInvoicePage">
+
+<div data-role="page" id="viewCities">
   <div data-role="header">
-	<a href="#mainMenuPage" data-role="button" data-icon="back">Back</a>
-    <h1>Manage Invoices</h1>
-    
+  <a href="#mainMenuPage" data-role="button" data-icon="back">Back</a>
+    <h1>Cities</h1>
   </div>
   <div data-role="content">
-  	<h1>Invoices</h1>
-    <hr>
-    <div id="invoiceItems">
-		<% for (var i = 0; i < invoiceItems.length; i++){ %>				
-				<h3> 
-					Task Name:<span id="taskName<%= i %>"><%= invoiceItems[i] %> </span>
-				</h3>
-				<h3 id="dbItemType"> 
-					Task Type: <%=  %>
-				</h3>
-        <hr>
-		<% } %>
-	</div>
+    Some cool content
   </div>
   <div data-role="footer">
     <h4>Footer</h4>
   </div>
 </div>
+
+<!-- About page -->
+
 <div data-role="page" id="aboutPage">
   <div data-role="header">
-	<a href="#mainMenuPage" data-role="button" data-icon="back">Back</a>
+  <a href="#mainMenuPage" data-role="button" data-icon="back">Back</a>
     <h1>Header</h1>
   </div>
   <div data-role="content">
-  	Content
+    Content
   </div>
   <div data-role="footer">
     <h4>Footer</h4>
   </div>
 </div>
 </body>
-<script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
-<script>
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyBO1-jjR4Nai6fs_VrcfVwlUmBrPz7WPTE",
-    authDomain: "mcdevitt-69fb0.firebaseapp.com",
-    databaseURL: "https://mcdevitt-69fb0.firebaseio.com",
-    projectId: "mcdevitt-69fb0",
-    storageBucket: "mcdevitt-69fb0.appspot.com",
-    messagingSenderId: "975779557838"
-  };
-  firebase.initializeApp(config);
+
+<!-- Start of Invoice Management Page -->
+<div data-role="page" id="metroViewPage">
+  <div data-role="header">
+	<a href="#mainMenuPage" data-role="button" data-icon="back">Back</a>
+    <h1>Manage Invoices</h1>
+    
+  </div>
+  <div data-role="content">
+  	<h1>Metropolitan Areas</h1>
+    <hr>
+    
+    <div id="invoiceItems">
+
+  </div>
+  <div data-role="footer">
+    <h4>Footer</h4>
+  </div>
+</div>
+<!-- Page to view cities -->
+
+
+
+
+<!-- End of cities page -->
+
+
+<script type="text/javascript">
+// This script loads data into a Metropolitan class, and then renders it to the view when the mainMenuMetro button is pushed
+var metroItems = [];
+class Metropolitan {
+  constructor (name, id, cities, population) {
+      this.name = name;
+      this.id = id;
+      this.cities = cities;
+      this.population = population;
+  }
+}
+  $('#mainMenuMetroButton').click(function(){
+      $.get("/metropolitan", function(data, status){
+         // Load data into variables
+        var html = '';
+        for (var i=0; i < data.length; i++) {
+            var metroItemToInsert = new Metropolitan(data[i].name, data[i].id, data[i].cities, data[i].population);
+            metroItems.push(metroItemToInsert);
+            html +=  '<div onclick="clicked(this);" id="invoiceItem' + i + '" ><h2>' + metroItemToInsert.name + '</h2>';
+            html += '<h3>Cities: ' + metroItemToInsert.cities + '</h3>';
+            html += '<h3>Population: ' + metroItemToInsert.population + '</h3><hr></div>';
+
+        }
+        $('#invoiceItems').html(html);
+    });
+  });
+</script>
+<script type="text/javascript">
+function clicked(item) {
+   console.log($(item).attr("id"));
+}
 </script>
 </html>
 
