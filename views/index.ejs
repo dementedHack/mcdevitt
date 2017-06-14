@@ -14,7 +14,7 @@
   <div data-role="content">
     <div data-role="controlgroup">
         <a href="#uploadInvoicePage" data-role="button">Upload Invoice</a>
-        <a href="#metroViewPage" data-role="button" id="mainMenuMetroButton">Manage Invoices</a>
+        <a href="#metroViewPage" data-role="button" id="mainMenuMetroButton">View Data</a>
         <a href="#aboutPage" data-role="button">About</a>
     </div>
   </div>
@@ -51,7 +51,9 @@
     <h1>Cities</h1>
   </div>
   <div data-role="content">
+    <h1>Cities</h1><hr>
     <div id="citiesList">
+
     </div>
   </div>
   <div data-role="footer">
@@ -79,7 +81,7 @@
 <div data-role="page" id="metroViewPage">
   <div data-role="header">
 	<a href="#mainMenuPage" data-role="button" data-icon="back">Back</a>
-    <h1>Manage Invoices</h1>
+    <h1>Metropolitan</h1>
     
   </div>
   <div data-role="content">
@@ -93,8 +95,25 @@
     <h4>Footer</h4>
   </div>
 </div>
-<!-- Page to view cities -->
+<!-- Page to view locations -->
+<!-- Start of Invoice Management Page -->
+<div data-role="page" id="locationsPage">
+  <div data-role="header">
+  <a href="#mainMenuPage" data-role="button" data-icon="back">Back</a>
+    <h1>Retail Locations</h1>
+    
+  </div>
+  <div data-role="content">
+    <h1>Retail Locations</h1>
+    <hr>
+    
+    <div id="invoiceItems">
 
+  </div>
+  <div data-role="footer">
+    <h4>Footer</h4>
+  </div>
+</div>
 
 
 
@@ -128,24 +147,113 @@ class Metropolitan {
     });
   });
 </script>
+
 <script type="text/javascript">
+
 function getItemMetroName(item) {
     // This will get the name of the html Metropolitan item clicked
-   console.log($(item).children("#metroName").html());
+   //console.log($(item).children("#metroName").html());
    var metroItemName = $(item).children("#metroName").html();
+   sendMetroItemsAJAXRequest(metroItemName);
+}
 
-   //AJAX request to grab info for new page.
-   $.get("/city", {metropolitan: metroItemName}, function(data, status){
-      for (var i=0; i < data.length; i++) {
-        console.log(data[i]);
+function getCityName(item) {
+      // This will get the name of the html Metropolitan item clicked
+    var cityItemName = $(item).children("#cityName").html();
+    console.log(cityItemName)
+    sendLocationAJAXRequest(cityItemName);
+    
+} 
+
+function sendMetroItemsAJAXRequest(metroItemName) {
+  $.ajax({
+       url: "/city",
+       type: "GET",
+       data: {metropolitan: metroItemName},
+       contentType: "text/plain",
+       dataType: "json",
+       processData: true, // avoid the data being parsed to query string params
+       success: onMetroSuccess
+       //error: onError
+    });
+
+    function onMetroSuccess(data, status){
+      var cityItems = [];
+      class City{
+        constructor (name, id, metropolitan, population, surfaceArea, retailLocations) {
+            this.name = name;
+            this.id = id;
+            this.metropolitan = metropolitan;
+            this.population = population;
+            this.surfaceArea = surfaceArea;
+            this.retailLocations = retailLocations;
+        }
       }
-   })
-
+      var html = '';
+      for (var i= 0; i < data.length; i++) {
+            var cityItemToInsert = new City(data[i].name, data[i].id, data[i].metropolitan, data[i].population, data[i].surfaceArea, data[i].retailLocations);
+            cityItems.push(cityItemToInsert);
+            console.log(cityItemToInsert);
+            html +=  '<div onclick="getCityName(this);"><h2 id="cityName">' + cityItemToInsert.name + '</h2>';
+            html += '<h3 id="cityPopulation">Population: ' + cityItemToInsert.population + '</h3>';
+            html += '<h3 id="citySurfaceArea">SurfaceArea: ' + cityItemToInsert.surfaceArea + '</h3></div>';
+            html += '<h3 id="retailLocations">Retail Locations: ' + cityItemToInsert.retailLocations + '</h3><hr></div>';
+      }
+      console.log(html);
+      $('#citiesList').html(html);
+    }
    // Display info to new page
 
    // Go to new the new view
    $(location).attr('href', 'http://localhost:3000/#cities')
 }
+</script>
+<script type="text/javascript">
+function sendLocationAJAXRequest(locationItemName) {
+     $.ajax({
+       url: "/location",
+       type: "GET",
+       data: {city: locationItemName},
+       contentType: "text/plain",
+       dataType: "json",
+       processData: true, // avoid the data being parsed to query string params
+       success: onLocationSuccess
+       //error: onError
+    });
+
+     function onLocationSuccess(data, status){
+      var locationItems = [];
+      class Location{
+        constructor (name, id, footTraffic, population, address, city) {
+            this.name = name;
+            this.id = id;
+            this.footTraffic = footTraffic;
+            this.population = population;
+            this.address = address;
+            this.city = city;
+        }
+      }
+      var html = '';
+      for (var i= 0; i < data.length; i++) {
+            var locationItemToInsert = new Location(data[i].key, data[i].id, data[i].footTraffic, data[i].population, data[i].address, data[i].city);
+            locationItems.push(locationItemToInsert);
+            console.log(cityItemToInsert);
+            html +=  '<div onclick="getCityName(this);"><h2 id="locationName">' + locationItemToInsert.metropolitan + '</h2>';
+            html += '<h3 id="locationPopulation">Population: ' + locationItemToInsert.population + '</h3>';
+            html += '<h3 id="locationAddress">SurfaceArea: ' + locationItemToInsert.surfaceArea + '</h3></div>';
+            html += '<h3 id="locationCity">City: ' + locationItemToInsert.city + '</h3><hr></div>';
+      }
+      console.log(html);
+      //$('#citiesList').html(html);
+    }
+    $(location).attr('href', 'http://localhost:3000/#locationsPage');
+}
+// create script on push of  
+  // $('#cityItems').click(function(){
+ 
+  // });
+
+
 </script>
 </html>
 

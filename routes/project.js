@@ -15,19 +15,28 @@ var projectItems = [];
 var database = firebase.database();
 
 router.get('/', function(req, res, next){
-	projectItems = [];
-	readCityItemFromDB();
-	setTimeout(function(){
-		res.json(projectItems);
-	}, 200);
-	
+	console.log('asdfas')
+	// if (req.url === '/') {
+	// 	readAllProjectItemsFromDB();
+	// 	setTimeout(function(){
+	// 		res.json(cityItems);
+	// 	}, 200);
+	// } else {
+	// 	parseRequestString(req.url)
+	// }
 });
 
-function readCityItemFromDB() {
+
+function parseRequestString(stringToParse) {
+	console.log("searching for " + stringToParse);
+}
+
+function readAllProjectItemsFromDB() {
 	projectItems = [];
 	var ref = firebase.database().ref("project");
 	ref.on("child_added", function(snapshot) {
-		projectItems.push(snapshot.val())
+		var projectItemToAdd = new Project(snapshot.key, snapshot.val().id, snapshot.val().projectManager, snapshot.val().projectStartDate, snapshot.val().projectEndDate, snapshot.val().city);
+		projectItems.push(projectItemToAdd);
 	})
 }
 

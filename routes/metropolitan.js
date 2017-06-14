@@ -17,7 +17,7 @@ var database = firebase.database();
 /* GET invoice listing. Will respoond with JSON */
 router.get('/', function(req, res, next){
 	metroItems = [];
-	readMetroItemFromDB();
+	readAllMetroItemsFromDB();
 	setTimeout(function(){
 		res.json(metroItems);
 	}, 200);
@@ -26,7 +26,7 @@ router.get('/', function(req, res, next){
 
 
 // Function that scans the db for all items and then pushes the items into an array
-function readMetroItemFromDB(){
+function readAllMetroItemsFromDB(){
 	var ref = firebase.database().ref("metropolitanArea");
 	ref.on("child_added", function(snapshot) {
 		var citiesArr = []
