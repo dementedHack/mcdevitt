@@ -45,13 +45,14 @@
 </div>
 <!-- Page Break -->
 
-<div data-role="page" id="viewCities">
+<div data-role="page" id="cities">
   <div data-role="header">
   <a href="#mainMenuPage" data-role="button" data-icon="back">Back</a>
     <h1>Cities</h1>
   </div>
   <div data-role="content">
-    Some cool content
+    <div id="citiesList">
+    </div>
   </div>
   <div data-role="footer">
     <h4>Footer</h4>
@@ -118,9 +119,9 @@ class Metropolitan {
         for (var i=0; i < data.length; i++) {
             var metroItemToInsert = new Metropolitan(data[i].name, data[i].id, data[i].cities, data[i].population);
             metroItems.push(metroItemToInsert);
-            html +=  '<div onclick="clicked(this);" id="invoiceItem' + i + '" ><h2>' + metroItemToInsert.name + '</h2>';
-            html += '<h3>Cities: ' + metroItemToInsert.cities + '</h3>';
-            html += '<h3>Population: ' + metroItemToInsert.population + '</h3><hr></div>';
+            html +=  '<div onclick="getItemMetroName(this);"><h2 id="metroName">' + metroItemToInsert.name + '</h2>';
+            html += '<h3 id="metroCities">Cities: ' + metroItemToInsert.cities + '</h3>';
+            html += '<h3 id="metroPopulation">Population: ' + metroItemToInsert.population + '</h3><hr></div>';
 
         }
         $('#invoiceItems').html(html);
@@ -128,8 +129,22 @@ class Metropolitan {
   });
 </script>
 <script type="text/javascript">
-function clicked(item) {
-   console.log($(item).attr("id"));
+function getItemMetroName(item) {
+    // This will get the name of the html Metropolitan item clicked
+   console.log($(item).children("#metroName").html());
+   var metroItemName = $(item).children("#metroName").html();
+
+   //AJAX request to grab info for new page.
+   $.get("/city", {metropolitan: metroItemName}, function(data, status){
+      for (var i=0; i < data.length; i++) {
+        console.log(data[i]);
+      }
+   })
+
+   // Display info to new page
+
+   // Go to new the new view
+   $(location).attr('href', 'http://localhost:3000/#cities')
 }
 </script>
 </html>
