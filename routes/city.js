@@ -50,7 +50,6 @@ function readCityItemFromDBByMetroName(metroName) {
 	cityItems = [];
 	var ref = firebase.database().ref("city").orderByChild('metropolitan').equalTo(metroName);
 	ref.on("child_added", function(snapshot) {
-		var citiesList;
 		var cityItemReadFromDB = new City(snapshot.key, snapshot.val().id, snapshot.val().population, snapshot.val().surfaceArea, snapshot.val().retailLocations, snapshot.val().metropolitan);
 			console.log(cityItemReadFromDB);
 			cityItems.push(cityItemReadFromDB);
